@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ITI — Independent Thought Institute for Strategic Studies</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --iti-dark: #042C53;
+      --iti-blue: #185FA5;
+      --iti-light: #E6F1FB;
+      --text-primary: #1a1a1a;
+      --text-secondary: #555;
+      --text-muted: #888;
+      --bg-primary: #fff;
+      --bg-secondary: #f6f7f9;
+      --border: #e2e4e8;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-primary); background: var(--bg-primary); }
+    .rtl { direction: rtl; text-align: right; }
+
+    /* NAV */
+    nav {
+      background: var(--iti-dark);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { color: #fff; font-size: 16px; font-weight: 600; }
+    .nav-logo span { color: #85B7EB; font-size: 12px; font-weight: 400; display: block; }
+    .nav-links { display: flex; gap: 4px; align-items: center; }
+    .nav-links button {
+      background: transparent; border: none; color: #B5D4F4;
+      font-size: 14px; padding: 7px 16px; border-radius: 6px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .nav-links button:hover, .nav-links button.active { background: rgba(255,255,255,0.12); color: #fff; }
+    .lang-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 13px; padding: 6px 14px; border-radius: 6px;
+      cursor: pointer; margin-left: 8px; transition: background 0.15s;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* PAGES */
+    .page { display: none; min-height: calc(100vh - 64px - 56px); }
+    .page.active { display: block; }
+
+    /* HOME */
+    .hero {
+      background: linear-gradient(135deg, #042C53 0%, #185FA5 100%);
+      padding: 5rem 2rem;
+      text-align: center;
+      color: #fff;
+    }
+    .hero h1 { font-size: 32px; font-weight: 600; margin-bottom: 1rem; line-height: 1.35; }
+    .hero p { font-size: 16px; color: #B5D4F4; max-width: 520px; margin: 0 auto 2rem; line-height: 1.75; }
+    .hero-btn {
+      background: #fff; color: #185FA5; border: none;
+      padding: 12px 32px; border-radius: 8px; font-size: 15px;
+      font-weight: 600; cursor: pointer; transition: background 0.15s;
+    }
+    .hero-btn:hover { background: #E6F1FB; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .stat-card { background: var(--bg-primary); padding: 2rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .stat-card:not(:last-child) { border-right: 1px solid var(--border); }
+    .stat-num { font-size: 32px; font-weight: 700; color: var(--iti-blue); }
+    .stat-label { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+    .section { padding: 2.5rem 2rem; max-width: 1000px; margin: 0 auto; }
+    .section-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem; }
+
+    .research-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .research-card {
+      background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .research-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #aac; }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; font-weight: 500; }
+    .tag-blue { background: #E6F1FB; color: #185FA5; }
+    .tag-green { background: #EAF3DE; color: #3B6D11; }
+    .tag-amber { background: #FAEEDA; color: #854F0B; }
+    .research-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.5; margin-bottom: 8px; }
+    .research-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+    .read-more { font-size: 13px; color: var(--iti-blue); margin-top: 10px; display: block; font-weight: 500; }
+
+    /* ABOUT */
+    .about-header {
+      background: var(--bg-secondary); padding: 2.5rem 2rem;
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      max-width: 1000px; margin: 2rem auto; border-radius: 12px;
+    }
+    .about-icon {
+      width: 60px; height: 60px; background: var(--iti-light);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .about-icon i { font-size: 30px; color: var(--iti-blue); }
+    .about-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .about-header p { font-size: 15px; color: var(--text-secondary); line-height: 1.75; }
+    .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .pillar { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; background: var(--bg-primary); }
+    .pillar-icon { font-size: 24px; color: var(--iti-blue); margin-bottom: 10px; }
+    .pillar h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .pillar p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+    /* RESEARCH PAGE */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      color: var(--text-secondary); font-size: 13px; padding: 7px 16px;
+      border-radius: 20px; cursor: pointer; transition: all 0.15s;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--iti-light); color: var(--iti-blue); border-color: #85B7EB; }
+    .paper-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 16px; }
+    .paper-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+    .paper-date { font-size: 12px; color: var(--text-muted); }
+    .paper-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; line-height: 1.45; }
+    .paper-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .paper-authors { font-size: 13px; color: var(--text-muted); margin-top: 10px; }
+    .paper-authors i { font-size: 14px; vertical-align: -1px; margin-right: 4px; }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .contact-info h3, .contact-form h3 { font-size: 18px; font-weight: 600; margin-bottom: 1.25rem; }
+    .contact-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1.25rem; }
+    .contact-item i { font-size: 20px; color: var(--iti-blue); margin-top: 2px; }
+    .contact-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group textarea {
+      width: 100%; font-size: 14px; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--bg-primary); color: var(--text-primary);
+      font-family: inherit; transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--iti-blue); }
+    .form-group textarea { height: 100px; resize: vertical; }
+    .submit-btn {
+      background: var(--iti-blue); color: #fff; border: none;
+      padding: 11px 28px; border-radius: 8px; font-size: 15px;
+      font-weight: 600; cursor: pointer; width: 100%; transition: background 0.15s;
+    }
+    .submit-btn:hover { background: #0C447C; }
+    .success-msg {
+      display: none; text-align: center; color: #3B6D11;
+      font-size: 14px; padding: 12px; background: #EAF3DE;
+      border-radius: 8px; margin-top: 10px;
+    }
+
+    footer {
+      background: var(--iti-dark); color: #B5D4F4;
+      text-align: center; padding: 1.25rem; font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 22px; }
+      nav { padding: 0 1rem; }
+      .nav-links button { font-size: 12px; padding: 6px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" id="nav-logo">
+    ITI
+    <span id="nav-subtitle">Independent Thought Institute</span>
+  </div>
+  <div style="display:flex; align-items:center;">
+    <div class="nav-links">
+      <button class="active" onclick="showPage('home',this)" id="nav-home">Home</button>
+      <button onclick="showPage('about',this)" id="nav-about">About</button>
+      <button onclick="showPage('research',this)" id="nav-research">Research</button>
+      <button onclick="showPage('contact',this)" id="nav-contact">Contact</button>
+    </div>
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">عربي</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1 id="hero-title">Independent Thought Institute<br>for Strategic Studies</h1>
+    <p id="hero-desc">Advancing evidence-based research and policy analysis to shape a more informed world.</p>
+    <button class="hero-btn" onclick="showPage('research',null)" id="hero-btn">Explore Research</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">120+</div><div class="stat-label" id="stat1">Published Papers</div></div>
+    <div class="stat-card"><div class="stat-num">35</div><div class="stat-label" id="stat2">Researchers</div></div>
+    <div class="stat-card"><div class="stat-num">18</div><div class="stat-label" id="stat3">Partner Institutions</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title" id="latest-title">Latest Research</div>
+    <div class="research-grid">
+      <div class="research-card">
+        <span class="tag tag-blue">Security</span>
+        <h3 id="rc1-title">Regional Security Dynamics in a Multipolar World</h3>
+        <p id="rc1-desc">An analysis of shifting alliances and strategic interests across the Middle East.</p>
+        <span class="read-more" id="rm1">Read more →</span>
+      </div>
+      <div class="research-card">
+        <span class="tag tag-green">Economy</span>
+        <h3 id="rc2-title">Digital Economy & Policy Frameworks</h3>
+        <p id="rc2-desc">Examining regulatory approaches to emerging digital markets.</p>
+        <span class="read-more" id="rm2">Read more →</span>
+      </div>
+      <div class="research-card">
+        <span class="tag tag-amber">Society</span>
+        <h3 id="rc3-title">Youth Engagement in Civil Society</h3>
+        <p id="rc3-desc">Understanding the role of youth in democratic transitions.</p>
+        <span class="read-more" id="rm3">Read more →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="section">
+    <div class="about-header">
+      <div class="about-icon"><i class="ti ti-building-bank"></i></div>
+      <div>
+        <h2 id="about-title">About ITI</h2>
+        <p id="about-desc">The Independent Thought Institute for Strategic Studies (ITI) is a non-partisan research center dedicated to producing rigorous, independent analysis on regional and global strategic issues. Founded on the principle that informed policy leads to better outcomes, ITI brings together scholars, analysts, and practitioners to examine the complex forces shaping our world.</p>
+      </div>
+    </div>
+    <div class="section-title" id="pillars-title">Our Focus Areas</div>
+    <div class="pillars">
+      <div class="pillar"><div class="pillar-icon"><i class="ti ti-shield"></i></div><h4 id="p1h">Security Studies</h4><p id="p1p">Regional and international security, conflict analysis, and peace-building.</p></div>
+      <div class="pillar"><div class="pillar-icon"><i class="ti ti-chart-line"></i></div><h4 id="p2h">Economic Policy</h4><p id="p2p">Trade, development, digital economy, and sustainable growth frameworks.</p></div>
+      <div class="pillar"><div class="pillar-icon"><i class="ti ti-users"></i></div><h4 id="p3h">Governance</h4><p id="p3p">Democratic institutions, civil society, and political participation.</p></div>
+      <div class="pillar"><div class="pillar-icon"><i class="ti ti-world"></i></div><h4 id="p4h">Geopolitics</h4><p id="p4p">Multilateral relations, foreign policy, and strategic competition.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<div class="page" id="page-research">
+  <div class="section">
+    <div class="section-title" id="res-title">Research & Publications</div>
+    <div class="filter-row">
+      <button class="filter-btn active" id="f-all">All</button>
+      <button class="filter-btn" id="f-sec">Security</button>
+      <button class="filter-btn" id="f-eco">Economy</button>
+      <button class="filter-btn" id="f-gov">Governance</button>
+    </div>
+    <div class="paper-card">
+      <div class="paper-meta"><span class="tag tag-blue">Security</span><span class="paper-date">May 2025</span></div>
+      <h3>Regional Security Dynamics in a Multipolar World</h3>
+      <p>This paper examines the evolving security landscape across the Middle East as traditional alliances are tested by new geopolitical realities and emerging non-state actors.</p>
+      <div class="paper-authors"><i class="ti ti-user"></i> Dr. Sarah Al-Khalidi, Dr. Omar Nasser</div>
+    </div>
+    <div class="paper-card">
+      <div class="paper-meta"><span class="tag tag-green">Economy</span><span class="paper-date">March 2025</span></div>
+      <h3>Digital Economy & Policy Frameworks in Emerging Markets</h3>
+      <p>A comparative analysis of regulatory approaches adopted by emerging economies to govern digital platforms, fintech, and data sovereignty.</p>
+      <div class="paper-authors"><i class="ti ti-user"></i> Prof. Layla Hassan</div>
+    </div>
+    <div class="paper-card">
+      <div class="paper-meta"><span class="tag tag-amber">Governance</span><span class="paper-date">January 2025</span></div>
+      <h3>Youth Engagement in Civil Society and Democratic Transitions</h3>
+      <p>Drawing on field research across five countries, this study maps the role of youth movements in shaping institutional change and democratic norms.</p>
+      <div class="paper-authors"><i class="ti ti-user"></i> Dr. Khalid Mansour, Rania Yousef</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="section">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3 id="contact-title">Get in Touch</h3>
+        <div class="contact-item"><i class="ti ti-map-pin"></i><p id="addr">123 Research Avenue, Amman, Jordan</p></div>
+        <div class="contact-item"><i class="ti ti-mail"></i><p>info@iti-institute.org</p></div>
+        <div class="contact-item"><i class="ti ti-phone"></i><p>+962 6 555 0100</p></div>
+      </div>
+      <div class="contact-form">
+        <h3 id="form-title">Send a Message</h3>
+        <div class="form-group"><label id="lbl-name">Full Name</label><input type="text" id="inp-name" placeholder="Your name"></div>
+        <div class="form-group"><label id="lbl-email">Email Address</label><input type="email" id="inp-email" placeholder="you@example.com"></div>
+        <div class="form-group"><label id="lbl-msg">Message</label><textarea id="inp-msg" placeholder="Your message..."></textarea></div>
+        <button class="submit-btn" onclick="submitForm()" id="submit-btn">Send Message</button>
+        <div class="success-msg" id="success-msg">✓ Your message has been sent successfully!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer id="footer-text">© 2025 Independent Thought Institute for Strategic Studies (ITI). All rights reserved.</footer>
+
+<script>
+const isAr = { val: false };
+const t = {
+  en: {
+    navHome:'Home',navAbout:'About',navResearch:'Research',navContact:'Contact',
+    heroTitle:'Independent Thought Institute<br>for Strategic Studies',
+    heroDesc:'Advancing evidence-based research and policy analysis to shape a more informed world.',
+    heroBtn:'Explore Research',
+    stat1:'Published Papers',stat2:'Researchers',stat3:'Partner Institutions',
+    latestTitle:'Latest Research',
+    rc1Title:'Regional Security Dynamics in a Multipolar World',rc1Desc:'An analysis of shifting alliances and strategic interests across the Middle East.',
+    rc2Title:'Digital Economy & Policy Frameworks',rc2Desc:'Examining regulatory approaches to emerging digital markets.',
+    rc3Title:'Youth Engagement in Civil Society',rc3Desc:'Understanding the role of youth in democratic transitions.',
+    rm1:'Read more →',rm2:'Read more →',rm3:'Read more →',
+    aboutTitle:'About ITI',
+    aboutDesc:'The Independent Thought Institute for Strategic Studies (ITI) is a non-partisan research center dedicated to producing rigorous, independent analysis on regional and global strategic issues.',
+    pillarsTitle:'Our Focus Areas',
+    p1h:'Security Studies',p1p:'Regional and international security, conflict analysis, and peace-building.',
+    p2h:'Economic Policy',p2p:'Trade, development, digital economy, and sustainable growth frameworks.',
+    p3h:'Governance',p3p:'Democratic institutions, civil society, and political participation.',
+    p4h:'Geopolitics',p4p:'Multilateral relations, foreign policy, and strategic competition.',
+    resTitle:'Research & Publications',fAll:'All',fSec:'Security',fEco:'Economy',fGov:'Governance',
+    contactTitle:'Get in Touch',formTitle:'Send a Message',
+    lblName:'Full Name',lblEmail:'Email Address',lblMsg:'Message',submitBtn:'Send Message',
+    successMsg:'✓ Your message has been sent successfully!',
+    addr:'123 Research Avenue, Amman, Jordan',
+    footer:'© 2025 Independent Thought Institute for Strategic Studies (ITI). All rights reserved.',
+    langBtn:'عربي'
+  },
+  ar: {
+    navHome:'الرئيسية',navAbout:'عن المركز',navResearch:'الأبحاث',navContact:'تواصل معنا',
+    heroTitle:'معهد الفكر المستقل<br>للدراسات الاستراتيجية',
+    heroDesc:'نُعزِّز البحث العلمي وتحليل السياسات لبناء عالم أكثر وعياً ومعرفة.',
+    heroBtn:'استعرض الأبحاث',
+    stat1:'بحثاً منشوراً',stat2:'باحثاً',stat3:'مؤسسة شريكة',
+    latestTitle:'أحدث الأبحاث',
+    rc1Title:'ديناميكيات الأمن الإقليمي في عالم متعدد الأقطاب',rc1Desc:'تحليل للتحولات في التحالفات والمصالح الاستراتيجية في الشرق الأوسط.',
+    rc2Title:'الاقتصاد الرقمي وأُطر السياسات',rc2Desc:'دراسة المناهج التنظيمية للأسواق الرقمية الناشئة.',
+    rc3Title:'مشاركة الشباب في المجتمع المدني',rc3Desc:'فهم دور الشباب في مسارات التحول الديمقراطي.',
+    rm1:'اقرأ المزيد →',rm2:'اقرأ المزيد →',rm3:'اقرأ المزيد →',
+    aboutTitle:'عن معهد ITI',
+    aboutDesc:'معهد الفكر المستقل للدراسات الاستراتيجية مركز بحثي غير حزبي يُكرِّس جهوده لإنتاج تحليلات دقيقة ومستقلة حول القضايا الاستراتيجية الإقليمية والعالمية.',
+    pillarsTitle:'مجالات اهتمامنا',
+    p1h:'الدراسات الأمنية',p1p:'الأمن الإقليمي والدولي وتحليل النزاعات وبناء السلام.',
+    p2h:'السياسة الاقتصادية',p2p:'التجارة والتنمية والاقتصاد الرقمي وأُطر النمو المستدام.',
+    p3h:'الحوكمة',p3p:'المؤسسات الديمقراطية والمجتمع المدني والمشاركة السياسية.',
+    p4h:'الجيوسياسة',p4p:'العلاقات متعددة الأطراف والسياسة الخارجية والتنافس الاستراتيجي.',
+    resTitle:'الأبحاث والمنشورات',fAll:'الكل',fSec:'الأمن',fEco:'الاقتصاد',fGov:'الحوكمة',
+    contactTitle:'تواصل معنا',formTitle:'أرسل رسالة',
+    lblName:'الاسم الكامل',lblEmail:'البريد الإلكتروني',lblMsg:'الرسالة',submitBtn:'إرسال',
+    successMsg:'✓ تم إرسال رسالتك بنجاح!',
+    addr:'١٢٣ شارع البحث العلمي، عمّان، الأردن',
+    footer:'© ٢٠٢٥ معهد الفكر المستقل للدراسات الاستراتيجية. جميع الحقوق محفوظة.',
+    langBtn:'English'
+  }
+};
+
+function applyLang(lang) {
+  const l = t[lang];
+  document.body.classList.toggle('rtl', lang === 'ar');
+  const ids = ['navHome','navAbout','navResearch','navContact','stat1','stat2','stat3','latestTitle',
+    'rc1Title','rc1Desc','rc2Title','rc2Desc','rc3Title','rc3Desc','rm1','rm2','rm3',
+    'aboutTitle','aboutDesc','pillarsTitle','p1h','p1p','p2h','p2p','p3h','p3p','p4h','p4p',
+    'resTitle','contactTitle','formTitle','lblName','lblEmail','lblMsg','submitBtn','successMsg','addr'];
+  const elMap = {
+    navHome:'nav-home',navAbout:'nav-about',navResearch:'nav-research',navContact:'nav-contact',
+    stat1:'stat1',stat2:'stat2',stat3:'stat3',latestTitle:'latest-title',
+    rc1Title:'rc1-title',rc1Desc:'rc1-desc',rc2Title:'rc2-title',rc2Desc:'rc2-desc',
+    rc3Title:'rc3-title',rc3Desc:'rc3-desc',rm1:'rm1',rm2:'rm2',rm3:'rm3',
+    aboutTitle:'about-title',aboutDesc:'about-desc',pillarsTitle:'pillars-title',
+    p1h:'p1h',p1p:'p1p',p2h:'p2h',p2p:'p2p',p3h:'p3h',p3p:'p3p',p4h:'p4h',p4p:'p4p',
+    resTitle:'res-title',contactTitle:'contact-title',formTitle:'form-title',
+    lblName:'lbl-name',lblEmail:'lbl-email',lblMsg:'lbl-msg',submitBtn:'submit-btn',
+    successMsg:'success-msg',addr:'addr'
+  };
+  ids.forEach(key => {
+    const el = document.getElementById(elMap[key]);
+    if (el) el.innerHTML = l[key];
+  });
+  document.getElementById('hero-title').innerHTML = l.heroTitle;
+  document.getElementById('hero-desc').textContent = l.heroDesc;
+  document.getElementById('hero-btn').textContent = l.heroBtn;
+  document.getElementById('f-all').textContent = l.fAll;
+  document.getElementById('f-sec').textContent = l.fSec;
+  document.getElementById('f-eco').textContent = l.fEco;
+  document.getElementById('f-gov').textContent = l.fGov;
+  document.getElementById('lang-btn').textContent = l.langBtn;
+  document.getElementById('footer-text').textContent = l.footer;
+}
+
+function toggleLang() {
+  isAr.val = !isAr.val;
+  applyLang(isAr.val ? 'ar' : 'en');
+}
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else {
+    const map = {home:'nav-home',about:'nav-about',research:'nav-research',contact:'nav-contact'};
+    const b = document.getElementById(map[name]);
+    if (b) b.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+function submitForm() {
+  const n = document.getElementById('inp-name').value.trim();
+  const e = document.getElementById('inp-email').value.trim();
+  const m = document.getElementById('inp-msg').value.trim();
+  if (!n || !e || !m) { alert(isAr.val ? 'يرجى ملء جميع الحقول' : 'Please fill in all fields'); return; }
+  document.getElementById('success-msg').style.display = 'block';
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-email').value = '';
+  document.getElementById('inp-msg').value = '';
+  setTimeout(() => { document.getElementById('success-msg').style.display = 'none'; }, 4000);
+}
+</script>
+</body>
+</html>
